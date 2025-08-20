@@ -1,0 +1,43 @@
+:root{
+  --bg: #0f0f10;
+  --surface: #151518;
+  --text: #eaeaf0;
+  --muted: #b6b6c2;
+  --accent: #ff8243;
+  --ring: #ffffff33;
+  --radius: 18px;
+  --shadow: 0 8px 30px rgb(0 0 0 / .35);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: system-ui, sans-serif;
+  background: radial-gradient(1200px 800px at 100% -200px, #1d1d22 0, #0f0f10 60%);
+  color:var(--text);
+  line-height:1.55;
+}
+
+header{max-width:1100px; margin:40px auto 10px; padding:0 22px;}
+header h1{font-size:2rem; margin:.2rem 0 .4rem}
+header p{color:var(--muted)}
+
+main{max-width:1100px; margin:0 auto 80px; padding:0 22px}
+
+.gallery{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap:22px; margin-top:22px;
+}
+.card{background:linear-gradient(180deg, #202027, #141418); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; border:1px solid #ffffff14; position:relative;}
+.img-btn{all:unset; cursor:pointer; display:block; width:100%}
+.img-btn img{width:100%; height:260px; object-fit:cover}
+.label{position:absolute; bottom:0; left:0; right:0; padding:16px; font-weight:600; background:linear-gradient(180deg, transparent, #000000c0)}
+.badge{position:absolute; top:12px; left:12px; background: #ffffff1a; color:var(--text); padding:6px 10px; border-radius:999px; font-size:.82rem; border:1px solid #ffffff33;}
+
+.modal{position:fixed; inset:0; display:grid; place-items:center; background:#00000080; opacity:0; pointer-events:none; transition:.2s ease;}
+.modal.open{opacity:1; pointer-events:auto}
+.modal-content{width:min(760px, 92vw); background:#1a1a1f; color:var(--text); border-radius:calc(var(--radius) + 6px); border:1px solid #ffffff1f; box-shadow:var(--shadow); position:relative;}
+.modal-scroll{max-height:75vh; overflow:auto; padding:26px 24px}
+.close{position:absolute; top:12px; right:12px; width:42px; height:42px; border-radius:10px; border:1px solid #ffffff2a; background:#ffffff10; color:var(--text); font-size:22px; cursor:pointer}
+.close:hover{background:#ffffff18}
