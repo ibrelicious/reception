@@ -1,49 +1,99 @@
 <!doctype html>
 <html lang="sv">
 <head>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-MP6CBL6J');</script>
-<!-- End Google Tag Manager -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Receptionen – Mina favoritrecept</title>
+  <meta name="description" content="Snabba recept för frukost, middag och dessert." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MP6CBL6J');
+  </script>
+  <!-- End Google Tag Manager -->
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MP6CBL6J"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MP6CBL6J"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo-mark" aria-hidden="true">R</div>
+
+      <div class="header-text">
+        <h1>Receptionen</h1>
+        <p>Mina favoritrecept samlade på ett ställe – perfekta för snabba vardagar.</p>
+      </div>
+
+      <nav class="filters" aria-label="Filtrera recept">
+        <button class="filter-btn active" data-filter="all">Alla</button>
+        <button class="filter-btn" data-filter="Frukost">Frukost</button>
+        <button class="filter-btn" data-filter="Middag">Middag</button>
+        <button class="filter-btn" data-filter="Dessert">Dessert</button>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <section class="gallery" aria-label="Receptgalleri">
-      <article class="card">
-        <button class="img-btn" data-target="pannkakor-recept" aria-haspopup="dialog" aria-controls="recipeModal">
-          <span class="badge">Frukost</span>
-          <img src="Pannkakor.png" alt="Fluffiga amerikanska pannkakor" loading="lazy" />
-          <span class="label">🥞 Fluffiga Amerikanska Pannkakor</span>
-        </button>
-      </article>
+  <main class="page-main">
+    <section class="container">
+      <div class="intro">
+        <h2>Välj något gott ✨</h2>
+        <p>Klicka på ett kort för att öppna hela receptet. Filtrera högst upp om du vet vad du är sugen på.</p>
+      </div>
 
-      <article class="card">
-        <button class="img-btn" data-target="pasta-recept" aria-haspopup="dialog" aria-controls="recipeModal">
-          <span class="badge">Middag</span>
-          <img src="kycklingpasta.png" alt="Krämig pasta med kyckling och spenat" loading="lazy" />
-          <span class="label">🍝 Krämig Pasta med Kyckling och Spenat</span>
-        </button>
-      </article>
+      <section class="gallery" aria-label="Receptgalleri">
+        <article class="card" data-category="Frukost">
+          <button class="img-btn" data-target="pannkakor-recept" aria-haspopup="dialog" aria-controls="recipeModal">
+            <span class="badge">Frukost</span>
+            <img src="Pannkakor.png" alt="Fluffiga amerikanska pannkakor" loading="lazy" />
+            <div class="card-footer">
+              <span class="label">🥞 Fluffiga Amerikanska Pannkakor</span>
+              <span class="meta">Ca 20 min • 10 st</span>
+            </div>
+          </button>
+        </article>
 
-      <article class="card">
-        <button class="img-btn" data-target="mousse-recept" aria-haspopup="dialog" aria-controls="recipeModal">
-          <span class="badge">Dessert</span>
-          <img src="chokladmousse.png" alt="Enkel chokladmousse i glas" loading="lazy" />
-          <span class="label">🍫 Enkel Chokladmousse</span>
-        </button>
-      </article>
+        <article class="card" data-category="Middag">
+          <button class="img-btn" data-target="pasta-recept" aria-haspopup="dialog" aria-controls="recipeModal">
+            <span class="badge">Middag</span>
+            <img src="kycklingpasta.png" alt="Krämig pasta med kyckling och spenat" loading="lazy" />
+            <div class="card-footer">
+              <span class="label">🍝 Krämig Pasta med Kyckling &amp; Spenat</span>
+              <span class="meta">30 min • 4 portioner</span>
+            </div>
+          </button>
+        </article>
+
+        <article class="card" data-category="Dessert">
+          <button class="img-btn" data-target="mousse-recept" aria-haspopup="dialog" aria-controls="recipeModal">
+            <span class="badge">Dessert</span>
+            <img src="chokladmousse.png" alt="Enkel chokladmousse i glas" loading="lazy" />
+            <div class="card-footer">
+              <span class="label">🍫 Enkel Chokladmousse</span>
+              <span class="meta">10 min + tid i kyl</span>
+            </div>
+          </button>
+        </article>
+      </section>
     </section>
 
-    <!-- Dolda recept -->
+    <!-- Dolda recept (innehåll kopieras in i modalen) -->
     <div id="pannkakor-recept" class="recipe-content" hidden>
       <h2>🥞 Fluffiga Amerikanska Pannkakor</h2>
       <h3>Ingredienser (ca 10 st)</h3>
@@ -121,10 +171,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </main>
 
-  <footer>
-    Tips: Lägg bildfilerna i samma mapp som denna HTML. Filnamn: <code>Pannkakor.png</code>, <code>kycklingpasta.png</code>, <code>chokladmousse.png</code>.
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Byggd med ❤️ av Receptionen.</p>
+      <p class="footer-note">
+        Tips: Lägg bilderna i samma mapp som HTML-filen.
+        Filnamn: <code>Pannkakor.png</code>, <code>kycklingpasta.png</code>, <code>chokladmousse.png</code>.
+      </p>
+    </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
