@@ -1,176 +1,259 @@
 <!doctype html>
 <html lang="sv">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Receptionen – Mina favoritrecept</title>
-  <meta name="description" content="Snabba recept för frukost, middag och dessert." />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Receptionen – Mina favoritrecept</title>
+    <meta name="description" content="Snabba recept för frukost, middag och dessert." />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="styles.css" />
+    <style>
+        /* ====== MÖRK BAKGRUND + MINIMAL LAYOUT ====== */
+        :root{
+            --bg:#0b0d12; --bg2:#0a0a0f; --surface:#151826;
+            --text:#eef0f6; --muted:#a7acc2; --accent:#ff8243;
+            --border:#ffffff1a; --radius:16px;
+        }
+        *{box-sizing:border-box}
+        html,body{margin:0}
+        body{
+            font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
+            color:var(--text); line-height:1.6;
+            background:
+                    radial-gradient(1200px 800px at 80% -100px,#172033 0%,transparent 60%),
+                    radial-gradient(1100px 700px at -200px 120%,#1c0f08 0%,transparent 55%),
+                    linear-gradient(180deg,var(--bg),var(--bg2));
+            min-height:100vh; display:flex; flex-direction:column;
+        }
+        .container{max-width:1100px;margin:0 auto;padding:0 20px}
 
-  <!-- Google Tag Manager (om du använder den) -->
-  <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MP6CBL6J');
-  </script>
+        /* ===== Header ===== */
+        header{position:sticky;top:0;z-index:10;background:rgba(9,11,17,.85);backdrop-filter:blur(14px);
+            border-bottom:1px solid var(--border)}
+        .header-inner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:14px 0}
+        .logo{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;
+            background:radial-gradient(circle at 30% 20%,#ffd8c1 0,#ff8243 45%,#ff5b35 75%);
+            font-weight:800;color:#1a0e09}
+        .header-text h1{margin:0;font-size:clamp(1.6rem,2.6vw,2.1rem)}
+        .header-text p{margin:0;color:var(--muted);font-size:.95rem}
+        .filters{display:flex;gap:.5rem;margin-left:auto;flex-wrap:wrap}
+        .filters button{border:1px solid var(--border);background:rgba(255,255,255,.04);
+            color:var(--text);padding:6px 12px;border-radius:999px;cursor:pointer;font-size:.85rem}
+        .filters button.active{background:var(--accent);border-color:transparent;color:#1a0e09}
+
+        /* ===== Intro ===== */
+        .intro{padding:22px 0 8px}
+        .intro h2{margin:0 0 4px;font-size:1.25rem}
+        .intro p{margin:0;color:var(--muted)}
+
+        /* ===== Gallery & Cards ===== */
+        .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+        .card{background:linear-gradient(180deg,var(--surface),#10131d);border:1px solid var(--border);
+            border-radius:var(--radius);overflow:hidden;position:relative}
+        .badge{position:absolute;top:10px;left:10px;background:rgba(10,12,18,.9);color:var(--text);
+            border:1px solid #ffffff30;border-radius:12px;padding:4px 10px;font-size:.78rem}
+
+        /* >>> HÅRDA OVERRIDES FÖR SMÅ BILDER <<< */
+        .img-btn{all:unset;cursor:pointer;display:flex;flex-direction:column;height:100%}
+        .img-btn img,
+        .gallery img,
+        .card img{
+            width:100% !important;
+            height:110px !important;           /* <-- justera till 90px om du vill ha ännu mindre */
+            object-fit:cover !important;
+            display:block !important;
+            border-bottom:1px solid var(--border);
+        }
+
+        .card-footer{padding:10px 12px 12px}
+        .label{font-weight:600;font-size:.95rem}
+        .meta{color:var(--muted);font-size:.78rem}
+
+        /* ===== Modal ===== */
+        .modal{position:fixed;inset:0;display:grid;place-items:center;background:rgba(4,6,10,.75);
+            backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:30}
+        .modal.open{opacity:1;pointer-events:auto}
+        .modal-content{width:min(760px,92vw);background:var(--surface);color:var(--text);
+            border:1px solid var(--border);border-radius:18px;position:relative}
+        .modal-scroll{max-height:75vh;overflow:auto;padding:22px}
+        .close{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:12px;
+            border:1px solid #ffffff26;background:rgba(12,14,20,.92);color:var(--text);font-size:22px;cursor:pointer}
+        .site-footer{border-top:1px solid var(--border);background:#0a0c12}
+        .footer-inner{padding:16px 0 18px;font-size:.86rem;color:var(--muted)}
+        @media (max-width:700px){
+            .img-btn img,.gallery img,.card img{height:100px !important}
+        }
+    </style>
 </head>
 <body>
-  <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MP6CBL6J"
-            height="0" width="0" style="display:none;visibility:hidden"></iframe>
-  </noscript>
-
-  <header class="site-header">
+<header>
     <div class="container header-inner">
-      <div class="logo-mark" aria-hidden="true">R</div>
-
-      <div class="header-text">
-        <h1>Receptionen</h1>
-        <p>Mina favoritrecept i en enkel, mörk layout.</p>
-      </div>
-
-      <nav class="filters" aria-label="Filtrera recept">
-        <button class="filter-btn active" data-filter="all">Alla</button>
-        <button class="filter-btn" data-filter="Frukost">Frukost</button>
-        <button class="filter-btn" data-filter="Middag">Middag</button>
-        <button class="filter-btn" data-filter="Dessert">Dessert</button>
-      </nav>
+        <div class="logo" aria-hidden="true">R</div>
+        <div class="header-text">
+            <h1>Receptionen</h1>
+            <p>Mina favoritrecept i mörk, kompakt layout.</p>
+        </div>
+        <nav class="filters" aria-label="Filtrera recept">
+            <button class="active" data-filter="all">Alla</button>
+            <button data-filter="Frukost">Frukost</button>
+            <button data-filter="Middag">Middag</button>
+            <button data-filter="Dessert">Dessert</button>
+        </nav>
     </div>
-  </header>
+</header>
 
-  <main class="page-main">
-    <section class="container">
-      <div class="intro">
+<main class="container">
+    <section class="intro">
         <h2>Välj något gott ✨</h2>
-        <p>Klicka på ett kort för att öppna receptet. Bilderna är medvetet små för en kompakt sida.</p>
-      </div>
+        <p>Bilderna nedan är medvetet små (110px) för att sidan ska vara lätt att skrolla.</p>
+    </section>
 
-      <section class="gallery" aria-label="Receptgalleri">
+    <section class="gallery" aria-label="Receptgalleri">
         <article class="card" data-category="Frukost">
-          <button class="img-btn" data-target="pannkakor-recept" aria-haspopup="dialog" aria-controls="recipeModal">
-            <span class="badge">Frukost</span>
-            <img src="Pannkakor.png" alt="Fluffiga amerikanska pannkakor" loading="lazy" />
-            <div class="card-footer">
-              <span class="label">🥞 Fluffiga Amerikanska Pannkakor</span>
-              <span class="meta">~20 min • ca 10 st</span>
-            </div>
-          </button>
+            <button class="img-btn" data-target="pannkakor">
+                <span class="badge">Frukost</span>
+                <img src="Pannkakor.png" alt="Fluffiga amerikanska pannkakor" loading="lazy" />
+                <div class="card-footer">
+                    <div class="label">🥞 Fluffiga Amerikanska Pannkakor</div>
+                    <div class="meta">~20 min • ca 10 st</div>
+                </div>
+            </button>
         </article>
 
         <article class="card" data-category="Middag">
-          <button class="img-btn" data-target="pasta-recept" aria-haspopup="dialog" aria-controls="recipeModal">
-            <span class="badge">Middag</span>
-            <img src="kycklingpasta.png" alt="Krämig pasta med kyckling och spenat" loading="lazy" />
-            <div class="card-footer">
-              <span class="label">🍝 Krämig Pasta med Kyckling &amp; Spenat</span>
-              <span class="meta">~30 min • 4 port</span>
-            </div>
-          </button>
+            <button class="img-btn" data-target="pasta">
+                <span class="badge">Middag</span>
+                <img src="kycklingpasta.png" alt="Krämig pasta med kyckling och spenat" loading="lazy" />
+                <div class="card-footer">
+                    <div class="label">🍝 Krämig Pasta med Kyckling &amp; Spenat</div>
+                    <div class="meta">~30 min • 4 port</div>
+                </div>
+            </button>
         </article>
 
         <article class="card" data-category="Dessert">
-          <button class="img-btn" data-target="mousse-recept" aria-haspopup="dialog" aria-controls="recipeModal">
-            <span class="badge">Dessert</span>
-            <img src="chokladmousse.png" alt="Enkel chokladmousse i glas" loading="lazy" />
-            <div class="card-footer">
-              <span class="label">🍫 Enkel Chokladmousse</span>
-              <span class="meta">10 min + kyl</span>
-            </div>
-          </button>
+            <button class="img-btn" data-target="mousse">
+                <span class="badge">Dessert</span>
+                <img src="chokladmousse.png" alt="Enkel chokladmousse i glas" loading="lazy" />
+                <div class="card-footer">
+                    <div class="label">🍫 Enkel Chokladmousse</div>
+                    <div class="meta">10 min + kyl</div>
+                </div>
+            </button>
         </article>
-      </section>
     </section>
 
-    <!-- DOLDA RECEPT (kopieras in i modalen) -->
-    <div id="pannkakor-recept" class="recipe-content" hidden>
-      <h2>🥞 Fluffiga Amerikanska Pannkakor</h2>
-      <h3>Ingredienser (ca 10 st)</h3>
-      <ul>
-        <li>2,5 dl vetemjöl</li>
-        <li>2 tsk bakpulver</li>
-        <li>2 msk socker</li>
-        <li>1 nypa salt</li>
-        <li>2,5 dl mjölk</li>
-        <li>1 ägg</li>
-        <li>2 msk smält smör</li>
-      </ul>
-      <h3>Gör så här</h3>
-      <ol>
-        <li>Blanda torra ingredienser i en skål.</li>
-        <li>Vispa mjölk, ägg och smör i en annan skål.</li>
-        <li>Rör ihop till en jämn smet.</li>
-        <li>Stek små pannkakor på medelvärme tills gyllene.</li>
-      </ol>
+    <!-- Dolda recept (kopieras till modalen) -->
+    <div id="pannkakor" hidden>
+        <h2>🥞 Fluffiga Amerikanska Pannkakor</h2>
+        <h3>Ingredienser (ca 10 st)</h3>
+        <ul>
+            <li>2,5 dl vetemjöl</li><li>2 tsk bakpulver</li><li>2 msk socker</li><li>1 nypa salt</li>
+            <li>2,5 dl mjölk</li><li>1 ägg</li><li>2 msk smält smör</li>
+        </ul>
+        <h3>Gör så här</h3>
+        <ol>
+            <li>Blanda torra ingredienser.</li><li>Vispa ihop mjölk, ägg, smör.</li>
+            <li>Rör till jämn smet.</li><li>Stek små pannkakor tills gyllene.</li>
+        </ol>
     </div>
 
-    <div id="pasta-recept" class="recipe-content" hidden>
-      <h2>🍝 Krämig Pasta med Kyckling &amp; Spenat</h2>
-      <h3>Ingredienser (4 port)</h3>
-      <ul>
-        <li>400 g pasta (penne)</li>
-        <li>2 kycklingfiléer</li>
-        <li>2 vitlöksklyftor</li>
-        <li>2,5 dl matlagningsgrädde</li>
-        <li>100 g färsk spenat</li>
-        <li>1 dl riven parmesan</li>
-        <li>Salt &amp; svartpeppar, olivolja</li>
-      </ul>
-      <h3>Gör så här</h3>
-      <ol>
-        <li>Koka pastan enligt anvisning.</li>
-        <li>Stek tärnad kyckling i olja tills gyllene.</li>
-        <li>Tillsätt vitlök, grädde, spenat, parmesan.</li>
-        <li>Vänd ner pastan och smaka av.</li>
-      </ol>
+    <div id="pasta" hidden>
+        <h2>🍝 Krämig Pasta med Kyckling &amp; Spenat</h2>
+        <h3>Ingredienser (4 port)</h3>
+        <ul>
+            <li>400 g pasta (penne)</li><li>2 kycklingfiléer</li><li>2 vitlöksklyftor</li>
+            <li>2,5 dl matlagningsgrädde</li><li>100 g färsk spenat</li><li>1 dl riven parmesan</li>
+            <li>Salt, peppar, olivolja</li>
+        </ul>
+        <h3>Gör så här</h3>
+        <ol>
+            <li>Koka pastan.</li><li>Stek kyckling gyllene.</li>
+            <li>Tillsätt vitlök, grädde, spenat, parmesan.</li><li>Vänd ner pastan.</li>
+        </ol>
     </div>
 
-    <div id="mousse-recept" class="recipe-content" hidden>
-      <h2>🍫 Enkel Chokladmousse</h2>
-      <h3>Ingredienser (4 port)</h3>
-      <ul>
-        <li>100 g mörk choklad</li>
-        <li>2 ägg (separerade)</li>
-        <li>2 msk socker</li>
-        <li>2 dl vispgrädde</li>
-      </ul>
-      <h3>Gör så här</h3>
-      <ol>
-        <li>Smält chokladen och låt svalna lite.</li>
-        <li>Vispa grädden lätt.</li>
-        <li>Vispa äggvitorna hårt med sockret.</li>
-        <li>Rör äggulor i chokladen, vänd ner grädde och vitor.</li>
-        <li>Kyl minst 1 h.</li>
-      </ol>
+    <div id="mousse" hidden>
+        <h2>🍫 Enkel Chokladmousse</h2>
+        <h3>Ingredienser (4 port)</h3>
+        <ul>
+            <li>100 g mörk choklad</li><li>2 ägg (separerade)</li><li>2 msk socker</li><li>2 dl vispgrädde</li>
+        </ul>
+        <h3>Gör så här</h3>
+        <ol>
+            <li>Smält chokladen, låt svalna.</li><li>Vispa grädden lätt.</li>
+            <li>Vispa äggvitor med socker.</li><li>Blanda i äggulor, vänd ner grädde & vitor.</li>
+        </ol>
     </div>
 
-    <!-- MODAL -->
-    <div class="modal" id="recipeModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title">
-      <div class="modal-content">
-        <button class="close" aria-label="Stäng recept (Esc)">×</button>
-        <div class="modal-scroll">
-          <h2 id="modal-title">Recept</h2>
-          <div class="modal-body"></div>
+    <!-- Modal -->
+    <div class="modal" id="recipeModal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="modal-content">
+            <button class="close" aria-label="Stäng (Esc)">×</button>
+            <div class="modal-scroll">
+                <h2 id="modalTitle">Recept</h2>
+                <div class="modal-body"></div>
+            </div>
         </div>
-      </div>
     </div>
-  </main>
+</main>
 
-  <footer class="site-footer">
+<footer class="site-footer">
     <div class="container footer-inner">
-      <p>Byggd med ❤️ av Receptionen</p>
-      <p class="footer-note">Bilder: <code>Pannkakor.png</code>, <code>kycklingpasta.png</code>, <code>chokladmousse.png</code>.</p>
+        <p>Byggd med ❤️ av Receptionen</p>
     </div>
-  </footer>
+</footer>
 
-  <script src="script.js" defer></script>
+<script>
+    // Minimal JS: öppna/stäng modal + filter
+    (function(){
+        const modal = document.getElementById("recipeModal");
+        const body = modal.querySelector(".modal-body");
+        const title = document.getElementById("modalTitle");
+        const closeBtn = modal.querySelector(".close");
+        const openers = document.querySelectorAll(".img-btn");
+        const filters = document.querySelectorAll(".filters button");
+        const cards = document.querySelectorAll(".card");
+        let lastFocus = null;
+
+        function open(id){
+            const src = document.getElementById(id);
+            if(!src) return;
+            body.innerHTML = src.innerHTML;
+            title.textContent = src.querySelector("h2")?.textContent || "Recept";
+            modal.classList.add("open");
+            modal.setAttribute("aria-hidden","false");
+            lastFocus = document.activeElement; closeBtn.focus();
+            document.addEventListener("keydown", esc);
+        }
+        function close(){
+            modal.classList.remove("open");
+            modal.setAttribute("aria-hidden","true");
+            body.innerHTML="";
+            document.removeEventListener("keydown", esc);
+            if(lastFocus && lastFocus.focus) lastFocus.focus();
+        }
+        function esc(e){ if(e.key==="Escape") close(); }
+
+        openers.forEach(b=>b.addEventListener("click",()=>open(b.dataset.target)));
+        modal.addEventListener("click",e=>{ if(e.target===modal) close(); });
+        closeBtn.addEventListener("click",close);
+
+        filters.forEach(btn=>{
+            btn.addEventListener("click",()=>{
+                const f = btn.dataset.filter;
+                filters.forEach(x=>x.classList.remove("active"));
+                btn.classList.add("active");
+                cards.forEach(c=>{
+                    const show = f==="all" || c.dataset.category===f;
+                    c.style.display = show ? "" : "none";
+                });
+            });
+        });
+    })();
+</script>
 </body>
 </html>
