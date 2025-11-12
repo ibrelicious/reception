@@ -31,18 +31,14 @@
         modal.classList.remove("open");
         modal.setAttribute("aria-hidden", "true");
         modalBody.innerHTML = "";
-
         document.removeEventListener("keydown", onKeydown);
-
         if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
             lastFocusedElement.focus();
         }
     }
 
     function onKeydown(e) {
-        if (e.key === "Escape") {
-            closeModal();
-        }
+        if (e.key === "Escape") closeModal();
     }
 
     openButtons.forEach((btn) => {
